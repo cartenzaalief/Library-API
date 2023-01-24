@@ -116,4 +116,22 @@ module.exports = {
       return res.status(500).send(error);
     }
   },
+  keepLogin: async (req, res) => {
+    console.log(req.decript);
+    try {
+      let data = await UsersModel.findAll({
+        where: {
+          id: req.decript.id,
+        },
+      });
+
+      console.log(data);
+
+      let token = createToken({ ...data[0].dataValues });
+      return res.status(200).send({ ...data[0].dataValues, token });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send(error);
+    }
+  },
 };
