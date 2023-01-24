@@ -12,4 +12,13 @@ app.get("/", (req, res) => {
   res.status(200).send("Library Labs API");
 });
 
+// Check sequelize connection
+const { checkSequelize, dbSequelize } = require("./src/config/db");
+checkSequelize();
+dbSequelize.sync();
+
+// Config routers
+const { usersRouter } = require("./src/routers");
+app.use("/users", usersRouter);
+
 app.listen(PORT, () => console.log(`Running API ${PORT}`));
