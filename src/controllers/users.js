@@ -20,12 +20,28 @@ module.exports = {
       let data = await UsersModel.findAll({
         where: {
           username,
-          password,
         },
       });
 
       if (data.length > 0) {
-        return res.status(200).send(data[0].dataValues);
+        let checkPass = bcrypt.compareSync(
+          password,
+          data[0].dataValues.password
+        );
+
+        if (checkPass) {
+          let token = createToken({ ...data[0].dataValues });
+          return res.status(200).send({
+            success: true,
+            message: "Log In success",
+            value: { ...data[0].dataValues, token },
+          });
+        } else {
+          return res.status(200).send({
+            success: false,
+            message: "Password incorrect",
+          });
+        }
       } else {
         return res.status(200).send({
           success: false,
@@ -57,6 +73,8 @@ module.exports = {
         },
       });
 
+      console.log("cek", data);
+
       if (data.length > 0) {
         return res.status(200).send({
           success: false,
@@ -86,7 +104,7 @@ module.exports = {
           return res.status(200).send({
             success: true,
             message: "Sign up success",
-            data: create,
+            value: create,
           });
         } catch (error) {
           console.log(error);
