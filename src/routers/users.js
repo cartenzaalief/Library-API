@@ -5,5 +5,6 @@ const { usersController } = require("../controllers");
 
 route.get("/", usersController.getUsersData);
 route.post("/login", usersController.login);
+route.post("/register", usersController.register);
 
 module.exports = route;
