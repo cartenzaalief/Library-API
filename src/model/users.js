@@ -10,7 +10,7 @@ const UsersModel = dbSequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    user_id: {
+    userid: {
       type: DataTypes.STRING,
     },
     username: {
@@ -19,7 +19,7 @@ const UsersModel = dbSequelize.define(
     fullname: {
       type: DataTypes.STRING,
     },
-    birth_date: {
+    birthdate: {
       type: DataTypes.STRING,
     },
     gender: {
