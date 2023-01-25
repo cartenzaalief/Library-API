@@ -57,8 +57,7 @@ module.exports = {
     let {
       username,
       password,
-      firstname,
-      lastname,
+      fullname,
       birthdate,
       gender,
       address,
@@ -93,7 +92,7 @@ module.exports = {
           let create = await UsersModel.create({
             userid,
             username,
-            fullname: firstname + " " + lastname,
+            fullname,
             birthdate,
             gender,
             address,
