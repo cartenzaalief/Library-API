@@ -2,6 +2,7 @@ const UsersModel = require("../model/users");
 const { hashPassword, createToken } = require("../config/encript");
 const bcrypt = require("bcrypt");
 const sequelize = require("sequelize");
+const { transport } = require("../config/nodemailer");
 
 module.exports = {
   getUsersData: async (req, res) => {
@@ -14,9 +15,8 @@ module.exports = {
     }
   },
   login: async (req, res) => {
-    let { username, password } = req.body;
-
     try {
+      let { username, password } = req.body;
       let data = await UsersModel.findAll({
         where: {
           username,
@@ -54,25 +54,24 @@ module.exports = {
     }
   },
   register: async (req, res) => {
-    let {
-      username,
-      password,
-      fullname,
-      birthdate,
-      gender,
-      address,
-      phone,
-      email,
-    } = req.body;
-
     try {
+      let {
+        username,
+        password,
+        fullname,
+        birthdate,
+        gender,
+        address,
+        phone,
+        email,
+      } = req.body;
       let data = await UsersModel.findAll({
         where: {
-          [sequelize.Op.or]: [{ username, phone, email }],
+          [sequelize.Op.or]: [{ username }, { email }, { phone }],
         },
       });
 
-      console.log("cek", data);
+      console.log(data);
 
       if (data.length > 0) {
         return res.status(200).send({
@@ -100,10 +99,28 @@ module.exports = {
             email,
             password: newPass,
           });
+
+          let token = createToken({
+            id: data.length + 1,
+            userid,
+            username,
+            email,
+          });
+
+          transport.sendMail({
+            from: "Library Labs",
+            to: email,
+            subject: "E-mail Verification",
+            html: `<div>
+              <h3>Please confirm your e-mail address by clicking on the link below</h3>
+              <a href="http://localhost:3000/verification?t=${token}">Confirm e-mail</a>
+              </div>`,
+          });
+
           return res.status(200).send({
             success: true,
-            message: "Sign up success",
-            value: create,
+            message:
+              "Sign up success, please check your e-mail to confirm your e-mail address",
           });
         } catch (error) {
           console.log(error);
@@ -116,8 +133,8 @@ module.exports = {
     }
   },
   keepLogin: async (req, res) => {
-    console.log(req.decript);
     try {
+      console.log(req.decript);
       let data = await UsersModel.findAll({
         where: {
           id: req.decript.id,
@@ -128,6 +145,31 @@ module.exports = {
 
       let token = createToken({ ...data[0].dataValues });
       return res.status(200).send({ ...data[0].dataValues, token });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send(error);
+    }
+  },
+  verifiedAccount: async (req, res) => {
+    try {
+      console.log(req.decript);
+      let update = await UsersModel.update(
+        {
+          status: "verified",
+        },
+        {
+          where: {
+            id: req.decript.id,
+          },
+        }
+      );
+
+      console.log(update);
+
+      return res.status(200).send({
+        success: true,
+        message: "E-mail confirmation success",
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).send(error);

@@ -45,6 +45,10 @@ const UsersModel = dbSequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    status: {
+      type: DataTypes.STRING,
+      defaultValue: "unverified",
+    },
   },
   {
     timestamps: false,
