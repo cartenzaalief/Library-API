@@ -20,7 +20,8 @@ checkSequelize();
 dbSequelize.sync();
 
 // Config routers
-const { usersRouter } = require("./src/routers");
+const { usersRouter, booksRouter } = require("./src/routers");
 app.use("/users", usersRouter);
+app.use("/books", booksRouter);
 
 app.listen(PORT, () => console.log(`Running API ${PORT}`));

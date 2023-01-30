@@ -13,7 +13,7 @@ const dbSequelize = new Sequelize(
 const checkSequelize = async () => {
   try {
     await dbSequelize.authenticate();
-    console.log("Sequelize Connectin Success");
+    console.log("Sequelize Connection Success");
   } catch (error) {
     console.log(error);
   }

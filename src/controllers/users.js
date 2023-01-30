@@ -23,6 +23,8 @@ module.exports = {
         },
       });
 
+      console.log(data);
+
       if (data.length > 0) {
         let checkPass = bcrypt.compareSync(
           password,
