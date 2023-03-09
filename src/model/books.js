@@ -25,6 +25,9 @@ const BooksModel = dbSequelize.define(
     description: {
       type: DataTypes.STRING,
     },
+    cover: {
+      type: DataTypes.STRING,
+    },
   },
   {
     timestamps: false,

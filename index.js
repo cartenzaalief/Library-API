@@ -10,8 +10,9 @@ app.use(express.json());
 app.use(cors());
 app.use(bearerToken());
 
-app.get("/", (req, res) => {
-  res.status(200).send("Library Labs API");
+app.get("/", (req, res, next) => {
+  res.send("Library Labs API");
+  next()
 });
 
 // Check sequelize connection
